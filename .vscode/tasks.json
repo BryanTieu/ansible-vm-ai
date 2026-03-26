@@ -1,0 +1,52 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "tower: launch capacity report",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "launch"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "tower: status",
+      "type": "shell",
+      "command": "node",
+      "args": ["src/cli.js", "status", "${input:jobId}"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "tower: logs",
+      "type": "shell",
+      "command": "node",
+      "args": ["src/cli.js", "logs", "${input:jobId}"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "tower: watch",
+      "type": "shell",
+      "command": "node",
+      "args": ["src/cli.js", "watch", "${input:jobId}"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "jobId",
+      "type": "promptString",
+      "description": "Tower job ID"
+    }
+  ]
+}
