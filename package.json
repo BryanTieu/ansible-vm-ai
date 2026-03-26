@@ -1,0 +1,22 @@
+{
+  "name": "tower-automation-cli",
+  "version": "1.0.0",
+  "description": "CLI automation for Ansible Tower workflows",
+  "type": "module",
+  "bin": {
+    "towerctl": "src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "launch": "node src/cli.js launch capacity-report",
+    "status": "node src/cli.js status",
+    "logs": "node src/cli.js logs",
+    "watch": "node src/cli.js watch"
+  },
+  "dependencies": {
+    "axios": "^1.11.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

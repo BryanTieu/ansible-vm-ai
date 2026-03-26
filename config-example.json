@@ -1,0 +1,73 @@
+{
+  "tower": {
+    "url": "https://tower-dev.rocketsoftware.com",
+    "username": "your_username",
+    "password": "your_password",
+    "verify_ssl": true
+  },
+  "windowsRemote": {
+    "username": "your_windows_username",
+    "password": "your_windows_password",
+    "port": 5985,
+    "useSsl": false,
+    "skipCertificateCheck": false,
+    "destinationRoot": "C:\\Tools"
+  },
+  "templates": {
+    "capacityReport": {
+      "name": "Self Service -CX Capacity Report",
+      "extraVars": {
+        "requested_product": "TechSupport MV"
+      }
+    },
+    "globalCxDeploymentV2": {
+      "name": "Self-Service - Deployment for Global CX Team_V2",
+      "extraVars": {
+        "requested_product": "TechSupport MV"
+      },
+      "requiredParameters": [
+        {
+          "key": "requested_os",
+          "label": "Operating System",
+          "allowedValues": [
+            "Alma Linux 8.9",
+            "Alma Linux 9.3",
+            "RedHat 8.9",
+            "RedHat 8.10",
+            "RedHat 9.6",
+            "RedHat 9.7",
+            "Rocky Linux 9.3",
+            "Rocky Linux 8.9",
+            "Windows 11",
+            "Windows 2019",
+            "Windows 2022",
+            "Windows 2025"
+          ]
+        },
+        {
+          "key": "requested_size",
+          "label": "Size",
+          "allowedValues": [
+            "Small",
+            "Medium",
+            "Large"
+          ]
+        },
+        {
+          "key": "requested_location",
+          "label": "Location"
+        },
+        {
+          "key": "requested_hostname_type",
+          "label": "System Identifier/Type"
+        },
+        {
+          "key": "ticket",
+          "label": "Ticket(Jira or Salesforce)",
+          "forceString": true
+        }
+      ]
+    }
+  },
+  "pollIntervalSeconds": 10
+}
