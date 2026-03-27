@@ -5,13 +5,24 @@
     "password": "your_password",
     "verify_ssl": true
   },
-  "windowsRemote": {
-    "username": "your_windows_username",
-    "password": "your_windows_password",
+  "remoteAccess": {
+    "username": "your_os_login_username",
+    "password": "your_os_login_password",
     "port": 5985,
     "useSsl": false,
     "skipCertificateCheck": false,
-    "destinationRoot": "C:\\Tools"
+    "destinationRoot": "C:\\Tools",
+    "unixUsername": "your_unix_ssh_username",
+    "unixPassword": "your_unix_ssh_password",
+    "unixPort": 22,
+    "unixDestinationRoot": "/opt/tools",
+    "aixPort": 22,
+    "aixDestinationRoot": "/opt/tools",
+    "linuxUsername": "your_linux_ssh_username",
+    "linuxPort": 22,
+    "linuxDestinationRoot": "/opt/tools",
+    "sshKeyPath": "C:\\Users\\you\\.ssh\\id_rsa",
+    "sshHostKey": "ssh-ed25519 255 SHA256:your_host_key_fingerprint"
   },
   "templates": {
     "capacityReport": {

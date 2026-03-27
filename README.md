@@ -5,7 +5,8 @@ This project provides a deterministic Tower automation backend with an AI-friend
 ## What it does
 - Launch the `Report - Self-Service Available Capacity` Tower job template
 - Launch the `Self-Service - Deployment for Global CX Team_V2` Tower job template
-- Copy and extract tool packages from the local `tools/` directory onto a Windows VM over PowerShell remoting
+- Deploy systems across any OS supported by the Tower template as long as required parameters and credentials are valid
+- Copy and extract tool packages from the local `tools/` directory onto Windows (WinRM) and Unix-like systems including Linux and AIX (SSH/SCP)
 - Query job status
 - Retrieve job logs
 - Watch a job until completion
@@ -15,18 +16,23 @@ This project provides a deterministic Tower automation backend with an AI-friend
    - `npm install`
 2. Copy `config-example.json` to `config.json`
 3. Fill in your Tower credentials in `config.json`
-4. If you want to install tools on Windows VMs, fill in the `windowsRemote` credentials in `config.json` or set `WINDOWS_VM_USERNAME` and `WINDOWS_VM_PASSWORD`
+4. If you want to install tools on deployed systems, fill in the `remoteAccess` credentials in `config.json` or set `REMOTE_ACCESS_USERNAME` and `REMOTE_ACCESS_PASSWORD`
 
 ## Commands
 - `node src/cli.js launch capacityReport`
 - `node src/cli.js launch globalCxDeploymentV2 requested_os="RedHat 9.7" requested_size=Medium requested_location=US requested_hostname_type=New ticket=CX-1234`
 - `node src/cli.js install-tools <computerName>`
+- `node src/cli.js install-tools --os=linux <computerName>`
+- `node src/cli.js install-tools --os=aix <computerName>`
+- `node src/cli.js install-tools --os=unix <computerName>`
+- `node src/cli.js install-tools --os=windows <computerName>`
 - `node src/cli.js install-tools <computerName> UV_WINDOWS_11.4.1`
 - `node src/cli.js status <jobId>`
 - `node src/cli.js logs <jobId>`
 - `node src/cli.js watch <jobId>`
 
 ## Template parameters
+- Deployments are not hardcoded to Linux or Windows. If the selected template accepts the OS value and credentials/permissions are correct, the deployment will run.
 - `globalCxDeploymentV2` requires:
    - `requested_os`
    - `requested_size`
@@ -61,13 +67,21 @@ If a deployment job fails and the logs point to insufficient capacity or lack of
 
 After verifying capacity, the AI layer should tell the user what is currently available and recommend a viable alternative deployment option instead of the failed request.
 
-## Windows tool installation
-- `install-tools` copies files from the local `tools/` directory to the target Windows machine over PowerShell remoting.
+## Tool installation (Windows, Linux, AIX)
+- `install-tools` supports Windows over PowerShell remoting and Unix-like targets (Rocky, Alma, RedHat, AIX) over SSH/SCP.
+- Deployment support and post-deployment tool installation are separate concerns: deployment can be OS-agnostic via Tower template inputs, while tool transport depends on remote access method.
 - Successful deployment jobs expose `hostname`, `fqdn`, and `ip` in Tower artifacts, and the CLI prints and saves those values.
 - If you do not specify tool names, all files in `tools/` are copied.
 - ZIP files are extracted under the configured remote destination root. Non-ZIP files are copied as-is.
-- The command requires the target `computerName` plus Windows credentials from `config.json` or environment variables.
+- The command requires the target `computerName` plus OS login credentials from `config.json` or environment variables.
 - If you omit `computerName`, `install-tools` reuses the last successful deployment target saved from `launch`, `status`, or `watch`.
+- The preferred config section is `remoteAccess`; legacy `windowsRemote` naming is still accepted for compatibility.
+- Unix install defaults use `remoteAccess.unixUsername`, `remoteAccess.unixPort`, and `remoteAccess.unixDestinationRoot`.
+- AIX-specific overrides are available through `remoteAccess.aixPort` and `remoteAccess.aixDestinationRoot`.
+- Unix/AIX install uses SSH key-based auth (from `remoteAccess.sshKeyPath` or `REMOTE_ACCESS_SSH_KEY_PATH`) or existing SSH agent credentials.
+- On Windows, Unix/AIX can also use password auth via PuTTY `plink`/`pscp` when `remoteAccess.unixPassword` is set.
+- Optional host key pinning can be configured with `remoteAccess.sshHostKey` or `REMOTE_ACCESS_SSH_HOST_KEY`.
+- Use `--os=linux`, `--os=aix`, `--os=unix`, or `--os=windows` to override auto-detection when needed.
 
 ## AI layer
 The file `copilot-instructions.md` tells Copilot to use this CLI as the backend. That gives you an AI orchestration layer even though MCP servers are disabled by policy.
